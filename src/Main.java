@@ -20,7 +20,7 @@ public class Main {
     private JButton[] buttons;
     private int noButtons = 15;
 
-    boolean wasSignLastWritten = false;
+    boolean wasSignLastWritten = false;         // Asta imi spune daca ultimul caracter introdus a fost un semn pentru a evita scrierea continua de semne matematice
 
     private String equalText(String arg) {
         double dRes = 0;                                // Rezultat
@@ -30,10 +30,10 @@ public class Main {
 
         // Probabil va trebui sa optimizez codul decat sa evit cazurile naspa
         // Aici din cauza splitului obtin stringuri nule si dupa arunca exceptii parseDouble
-        // Asa ca orice e string null, il fac "0"
+        // Asa ca orice e string null, il scot
         // Daca dau de un * sau / atunci:
         // Aplic operatia de * sau / de aici pe termenii adiacenti si pun rezultatul peste semn
-        // Ulterior pun valorile "0" in pozitiile adiacente
+        // Ulterior scot valorile adiacente
         for(int i = 0; i < operation.size(); i++) {
             if ((operation.get(i)).equals(""))
                 operation.remove(i);
@@ -85,20 +85,20 @@ public class Main {
                 } catch (NumberFormatException g) {
                     number = 10;
                 }
-                if(text == "CE")
+                if(text == "CE")                            // Daca a dat pe CE atunci dau reset la labelul cu operatiile
                     fieldLabel.setText("");
-                else if(text == "=") {
+                else if(text == "=") {                      // Daca am egal chem functia care prelucreaza sirul de date
                     fieldLabel.setText(equalText(fieldLabel.getText()));
                     wasSignLastWritten = false;
                 }
                 else {
-                    if (wasSignLastWritten == true && number <= 9) {
-                        fieldLabel.setText(fieldLabel.getText() + " " + text);
-                        wasSignLastWritten = false;
+                    if (wasSignLastWritten == true && number <= 9) {            // Daca am scris un semn inainte si acum scriu o cifra
+                        fieldLabel.setText(fieldLabel.getText() + " " + text);  // Scriu ceea ce e de pe buton + un spatiu
+                        wasSignLastWritten = false;                             // Marchez faptul ca ultimul caracter scris nu este un semn
                     }
-                    else if(wasSignLastWritten == false && number <= 9)
+                    else if(wasSignLastWritten == false && number <= 9)         // Daca nu am scris un semn inainte si inca scriu cifre, atunci doar pun cifra fara spatiu
                         fieldLabel.setText(fieldLabel.getText() + text);
-                    else if(wasSignLastWritten == false && (text == "+" || text == "-" || text == "*" || text == "/")) {
+                    else if(wasSignLastWritten == false && (text == "+" || text == "-" || text == "*" || text == "/")) {        // Daca nu am scris mai inainte un semn si il scriem acum
                         fieldLabel.setText(fieldLabel.getText() + " " + text);
                         wasSignLastWritten = true;
                     }
@@ -130,15 +130,7 @@ public class Main {
         buttons[14].addActionListener(listenerWriter);
         buttons[15] = new JButton("/");
         buttons[15].addActionListener(listenerWriter);
-        //int o = 1;
-        /*for(int i = 0; i <= 64; i += 32)
-            for(int j = 100; j <= 164; j += 32)
-                buttons[o++].setBounds(i, j, 32, 32);
 
-            buttons[0].setBounds(0, 196, 32, 228);
-            buttons[10].setBounds(96, 100, 32, 32);
-            buttons[11].setBounds(96, 132, 32, 32);
-            buttons[12].setBounds(96, 164, 32, 32);*/
 
     }
 
